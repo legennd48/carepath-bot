@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePath - WhatsApp Health Consultation</title>
+    <meta name="description" content="Get trusted medical guidance on WhatsApp in Lagos, Nigeria. Talk to verified pharmacists or doctors - no app download, no hospital queue, no surprise costs.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0A7E3A",  // Medical green
+                        secondary: "#2D9D5F",
+                        accent: "#F0F9F4"
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="min-h-screen bg-white font-sans">
+    <header class="bg-white shadow-sm">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-primary rounded-full"></div>
+                    <span class="text-xl font-semibold text-gray-800">CarePath</span>
+                </div>
+                <ul id="nav-items" class="hidden md:flex gap-6"></ul>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div id="mobile-menu" class="md:hidden mt-4 hidden">
+                <ul id="mobile-nav-items" class="space-y-3"></ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="bg-accent py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                        Get trusted medical guidance on WhatsApp
+                    </h1>
+                    <p class="text-gray-600 mb-8 text-lg md:text-xl">
+                        Talk to a verified pharmacist or doctor — no app download, no hospital queue, no surprise costs. Starting at ₦3,500.
+                    </p>
+                    <a href="https://wa.me/2347030332862" id="hero-button" class="inline-block bg-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-secondary transition duration-300 shadow-md">
+                        Chat with a Professional
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8 md:mb-12">How It Works</h2>
+                <div id="steps-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- Trust Section -->
+        <section class="bg-accent py-12 md:py-16">
+            <div class="container mx-auto px-4">
+                <div class="max-w-2xl mx-auto text-center">
+                    <div class="flex items-center justify-center mb-4">
+                        <i class="fas fa-shield-alt text-primary text-3xl mr-3"></i>
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800">Verified & Secure</h3>
+                    </div>
+                    <p class="text-gray-600 text-lg">
+                        All professionals are PCN-registered or MDCN-registered. Your consultations are documented and private.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8">Common Questions</h2>
+                <div id="faq-container" class="max-w-3xl mx-auto space-y-6"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-100 py-8 md:py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-6 h-6 bg-primary rounded-full"></div>
+                        <span class="text-lg font-semibold text-gray-800">CarePath</span>
+                    </div>
+                    <p class="text-gray-600">Lagos, Nigeria</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-700 mb-2">Contact us</p>
+                    <a href="mailto:thelogicbaseng@gmail.com" class="text-primary font-medium hover:text-secondary">thelogicbaseng@gmail.com</a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-300">
+                <ul id="footer-links" class="flex flex-wrap justify-center gap-4"></ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data layer
+        const navigationData = [
+            { "label": "Home", "href": "#home" },
+            { "label": "How It Works", "href": "#how-it-works" },
+            { "label": "Trust", "href": "#trust" },
+            { "label": "FAQ", "href": "#faq" }
+        ];
+
+        const stepsData = [
+            {
+                "title": "Choose your professional tier",
+                "description": "Select between pharmacist (₦3,500) or doctor (₦5,000) consultation based on your needs.",
+                "icon": "fas fa-user-md",
+                "color": "text-primary"
+            },
+            {
+                "title": "Describe your symptoms on WhatsApp",
+                "description": "Send your health concerns via WhatsApp chat. Our professionals will review and respond promptly.",
+                "icon": "fas fa-comment-medical",
+                "color": "text-secondary"
+            },
+            {
+                "title": "Get guidance and medication access",
+                "description": "Receive personalized advice, treatment plan, and pharmacy referrals if needed.",
+                "icon": "fas fa-prescription",
+                "color": "text-primary"
+            }
+        ];
+
+        const faqData = [
+            {
+                "question": "How quickly will I get a response?",
+                "answer": "Most consultations begin within 15-30 minutes during business hours (9am-7pm)."
+            },
+            {
+                "question": "Is this service available outside Lagos?",
+                "answer": "Currently we serve Lagos residents only, but we plan to expand to other cities soon."
+            },
+            {
+                "question": "Can I get prescription medications?",
+                "answer": "Our doctors can prescribe medications and refer you to trusted pharmacies for pickup."
+            },
+            {
+                "question": "What if I need follow-up consultations?",
+                "answer": "Follow-up chats within 7 days are included in the initial consultation fee."
+            }
+        ];
+
+        const footerLinksData = [
+            { "label": "Privacy Policy", "href": "#privacy" },
+            { "label": "Terms of Service", "href": "#terms" },
+            { "label": "Contact", "href": "#contact" },
+            { "label": "Careers", "href": "#careers" }
+        ];
+
+        // Reusable render functions
+        function renderNavigation(items) {
+            return items.map(item => `<li><a href="${item.href}" class="text-gray-600 hover:text-primary font-medium">${item.label}</a></li>`).join("");
+        }
+
+        function renderSteps(items) {
+            return items.map((item, index) => `
+                <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full ${item.color} bg-accent flex items-center justify-center mr-4">
+                            <i class="${item.icon} text-2xl"></i>
+                        </div>
+                        <span class="text-xl font-semibold text-gray-800">Step ${index + 1}</span>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-3">${item.title}</h3>
+                    <p class="text-gray-600">${item.description}</p>
+                </div>
+            `).join("");
+        }
+
+        function renderFAQ(items) {
+            return items.map(item => `
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-question-circle text-primary mr-3 mt-1"></i>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">${item.question}</h3>
+                    </div>
+                    <p class="text-gray-600">${item.answer}</p>
+                </div>
+            `).join("");
+        }
+
+        function renderFooterLinks(items) {
+            return items.map(item => `<li><a href="${item.href}" class="text-gray-600 hover:text-primary text-sm">${item.label}</a></li>`).join("");
+        }
+
+        // Initialize page content
+        document.getElementById("nav-items").innerHTML = renderNavigation(navigationData);
+        document.getElementById("mobile-nav-items").innerHTML = renderNavigation(navigationData);
+        document.getElementById("steps-container").innerHTML = renderSteps(stepsData);
+        document.getElementById("faq-container").innerHHTML = renderFAQ(faqData);
+        document.getElementById("footer-links").innerHTML = renderFooterLinks(footerLinksData);
+
+        // Mobile menu toggle
+        document.getElementById("mobile-menu-btn").addEventListener("click", function() {
+            const menu = document.getElementById("mobile-menu");
+            menu.classList.toggle("hidden");
+        });
+
+        // Smooth scrolling for anchor links
+        document.addEventListener("click", function(event) {
+            const link = event.target.closest("a[href^='#']");
+            if (!link) return;
+            
+            // Close mobile menu if open
+            document.getElementById("mobile-menu").classList.add("hidden");
+            
+            const targetId = link.getAttribute("href");
+            if (targetId === "#home") {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                return;
+            }
+            
+            const target = document.querySelector(targetId);
+            if (target) {
+                event.preventDefault();
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        });
+
+        // WhatsApp button behavior
+        document.getElementById("hero-button").addEventListener("click", function(event) {
+            // Allow normal link behavior for external URL
+            // No prevention needed for external links
+        });
+
+        // Set current section IDs for smooth scrolling
+        document.querySelector("main").children[0].id = "home";
+        document.querySelector("main").children[1].id = "how-it-works";
+        document.querySelector("main").children[2].id = "trust";
+        document.querySelector("main").children[3].id = "faq";
+    </script>
+</body>
+</html>
