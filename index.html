@@ -1,260 +1,829 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <base target="_self">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarePath - WhatsApp Health Consultation</title>
-    <meta name="description" content="Get trusted medical guidance on WhatsApp in Lagos, Nigeria. Talk to verified pharmacists or doctors - no app download, no hospital queue, no surprise costs.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#0A7E3A",  // Medical green
-                        secondary: "#2D9D5F",
-                        accent: "#F0F9F4"
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "system-ui", "sans-serif"]
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <base target="_self">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePath — WhatsApp Health Consultation (Prototype)</title>
+  <meta name="description" content="A prototype for accessible medical guidance via WhatsApp in Lagos, Nigeria. Regulatory approval pending.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep: #0D5C36;
+      --green-mid: #1A7A4A;
+      --green-light: #2A9D64;
+      --green-pale: #E8F5EE;
+      --green-faint: #F4FAF7;
+      --amber: #D97706;
+      --amber-light: #FEF3C7;
+      --amber-border: #FCD34D;
+      --ink: #111B15;
+      --ink-soft: #3A4D41;
+      --muted: #6B7F73;
+      --line: #D6E8DC;
+      --white: #FFFFFF;
+      --off-white: #F9FCFA;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── PROTOTYPE BANNER ── */
+    .proto-banner {
+      background: var(--amber-light);
+      border-bottom: 1.5px solid var(--amber-border);
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #78350F;
+      letter-spacing: 0.01em;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .proto-banner strong { font-weight: 700; }
+    .proto-badge {
+      display: inline-block;
+      background: var(--amber);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 0;
+      position: sticky;
+      top: 41px;
+      z-index: 99;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 34px; height: 34px;
+      background: var(--green-deep);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark svg { width: 18px; height: 18px; fill: white; }
+    .logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--ink);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green-deep); }
+    .nav-cta {
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 9px 20px;
+      background: var(--green-deep);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--green-mid); transform: translateY(-1px); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--ink); margin: 5px 0;
+      transition: 0.3s;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--green-faint);
+      padding: 80px 24px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      right: -120px; top: -120px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(26,122,74,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: -80px; bottom: -80px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(13,92,54,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      background: rgba(26,122,74,0.1);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 22px;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.18;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--green-deep);
+    }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      font-weight: 300;
+    }
+    .hero-price-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* ── PROTOTYPE DISCLAIMER BOX ── */
+    .disclaimer-box {
+      background: var(--amber-light);
+      border: 1.5px solid var(--amber-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      max-width: 680px;
+      margin: 48px auto 0;
+      text-align: left;
+    }
+    .disclaimer-box-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .disclaimer-box-header svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .disclaimer-box-header strong {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #78350F;
+    }
+    .disclaimer-box p {
+      font-size: 0.87rem;
+      color: #92400E;
+      line-height: 1.65;
+    }
+    .disclaimer-box p + p { margin-top: 8px; }
+
+    /* ── BUTTON ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green-deep);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(13,92,54,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--green-mid);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(13,92,54,0.3);
+    }
+    .btn-primary svg { width: 20px; height: 20px; fill: white; }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .section-intro {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps-header { margin-bottom: 48px; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .step-card {
+      background: var(--white);
+      padding: 36px 32px;
+      position: relative;
+    }
+    .step-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      color: var(--green-pale);
+      line-height: 1;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .step-icon {
+      width: 44px; height: 44px;
+      background: var(--green-pale);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .step-icon svg { width: 22px; height: 22px; stroke: var(--green-deep); fill: none; stroke-width: 1.8; }
+    .step-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .step-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── TRUST SECTION ── */
+    .trust-section { background: var(--green-faint); }
+    .trust-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .trust-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .trust-pill {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .trust-pill-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--green-pale);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .trust-pill-icon svg { width: 20px; height: 20px; stroke: var(--green-deep); fill: none; stroke-width: 2; }
+    .trust-pill h4 { font-size: 0.93rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .trust-pill p { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── PROTOTYPE NOTICE (full section) ── */
+    .prototype-section { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .proto-notice {
+      background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+      border: 2px solid var(--amber-border);
+      border-radius: 16px;
+      padding: 40px 44px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .proto-notice-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .proto-notice-icon {
+      width: 48px; height: 48px;
+      background: var(--amber);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .proto-notice-icon svg { width: 26px; height: 26px; fill: white; }
+    .proto-notice-header div {}
+    .proto-notice-header h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: #78350F;
+      margin-bottom: 2px;
+    }
+    .proto-notice-header span {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+    .proto-notice ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .proto-notice li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.92rem;
+      color: #92400E;
+      line-height: 1.6;
+    }
+    .proto-notice li::before {
+      content: '';
+      display: block;
+      width: 7px; height: 7px;
+      background: var(--amber);
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .proto-notice li strong { color: #78350F; }
+
+    /* ── FAQ ── */
+    .faq-section { background: var(--off-white); }
+    .faq-list {
+      max-width: 720px;
+      margin: 48px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 20px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .faq-q svg {
+      width: 18px; height: 18px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
+      transition: transform 0.3s;
+    }
+    .faq-item.open .faq-q svg { transform: rotate(180deg); }
+    .faq-a {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      padding: 0 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-item.open .faq-a {
+      max-height: 200px;
+      padding: 0 24px 20px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.55);
+      padding: 48px 24px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .footer-logo .logo-mark { background: rgba(255,255,255,0.15); }
+    .footer-logo span {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: white;
+    }
+    .footer-tagline { font-size: 0.85rem; }
+    .footer-contact a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .footer-contact a:hover { color: white; }
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 32px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p { font-size: 0.8rem; }
+    .footer-links { list-style: none; display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { top: 37px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: block; }
+      .mobile-nav {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+        margin-top: 12px;
+      }
+      .mobile-nav.open { display: flex; }
+      .mobile-nav a {
+        display: block;
+        padding: 10px 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--ink-soft);
+        text-decoration: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .steps-grid { grid-template-columns: 1fr; }
+      .trust-grid { grid-template-columns: 1fr; }
+      .proto-notice { padding: 28px 24px; }
+      .footer-inner { flex-direction: column; gap: 20px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      section { padding: 52px 20px; }
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .fade-up:nth-child(2) { transition-delay: 0.1s; }
+    .fade-up:nth-child(3) { transition-delay: 0.2s; }
+  </style>
 </head>
-<body class="min-h-screen bg-white font-sans">
-    <header class="bg-white shadow-sm">
-        <nav class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-primary rounded-full"></div>
-                    <span class="text-xl font-semibold text-gray-800">CarePath</span>
-                </div>
-                <ul id="nav-items" class="hidden md:flex gap-6"></ul>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-700">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-            <div id="mobile-menu" class="md:hidden mt-4 hidden">
-                <ul id="mobile-nav-items" class="space-y-3"></ul>
-            </div>
-        </nav>
-    </header>
+<body>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="bg-accent py-12 md:py-20">
-            <div class="container mx-auto px-4">
-                <div class="max-w-3xl mx-auto text-center">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                        Get trusted medical guidance on WhatsApp
-                    </h1>
-                    <p class="text-gray-600 mb-8 text-lg md:text-xl">
-                        Talk to a verified pharmacist or doctor — no app download, no hospital queue, no surprise costs. Starting at ₦3,500.
-                    </p>
-                    <a href="https://wa.me/2347030332862" id="hero-button" class="inline-block bg-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-secondary transition duration-300 shadow-md">
-                        Chat with a Professional
-                    </a>
-                </div>
-            </div>
-        </section>
+  <!-- PROTOTYPE BANNER -->
+  <div class="proto-banner">
+    <span class="proto-badge">Prototype</span>
+    <strong>This is a concept demo.</strong> No real medical professionals are available. Regulatory approval is pending. Do not use for actual health decisions.
+  </div>
 
-        <!-- How It Works -->
-        <section class="py-12 md:py-16">
-            <div class="container mx-auto px-4">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8 md:mb-12">How It Works</h2>
-                <div id="steps-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"></div>
-            </div>
-        </section>
-
-        <!-- Trust Section -->
-        <section class="bg-accent py-12 md:py-16">
-            <div class="container mx-auto px-4">
-                <div class="max-w-2xl mx-auto text-center">
-                    <div class="flex items-center justify-center mb-4">
-                        <i class="fas fa-shield-alt text-primary text-3xl mr-3"></i>
-                        <h3 class="text-xl md:text-2xl font-bold text-gray-800">Verified & Secure</h3>
-                    </div>
-                    <p class="text-gray-600 text-lg">
-                        All professionals are PCN-registered or MDCN-registered. Your consultations are documented and private.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ Section -->
-        <section class="py-12 md:py-16">
-            <div class="container mx-auto px-4">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8">Common Questions</h2>
-                <div id="faq-container" class="max-w-3xl mx-auto space-y-6"></div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-100 py-8 md:py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center gap-2 mb-2">
-                        <div class="w-6 h-6 bg-primary rounded-full"></div>
-                        <span class="text-lg font-semibold text-gray-800">CarePath</span>
-                    </div>
-                    <p class="text-gray-600">Lagos, Nigeria</p>
-                </div>
-                <div class="text-center md:text-right">
-                    <p class="text-gray-700 mb-2">Contact us</p>
-                    <a href="mailto:thelogicbaseng@gmail.com" class="text-primary font-medium hover:text-secondary">thelogicbaseng@gmail.com</a>
-                </div>
-            </div>
-            <div class="mt-8 pt-8 border-t border-gray-300">
-                <ul id="footer-links" class="flex flex-wrap justify-center gap-4"></ul>
-            </div>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/><path d="M11 6h2v2h-2zM11 16h2v2h-2z" opacity="0"/><path d="M10.5 6.5h3v11h-3z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         </div>
-    </footer>
+        <span class="logo-text">CarePath</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#trust">Trust & safety</a></li>
+        <li><a href="#prototype">Prototype notice</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a href="https://wa.me/2347030332862" class="nav-cta">Get early access</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-inner" style="padding-top:0">
+      <div class="mobile-nav" id="mobileNav" style="width:100%">
+        <a href="#how-it-works">How it works</a>
+        <a href="#trust">Trust & safety</a>
+        <a href="#prototype">Prototype notice</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://wa.me/2347030332862" style="color:var(--green-deep);font-weight:600">Get early access →</a>
+      </div>
+    </div>
+  </nav>
 
-    <script>
-        // Data layer
-        const navigationData = [
-            { "label": "Home", "href": "#home" },
-            { "label": "How It Works", "href": "#how-it-works" },
-            { "label": "Trust", "href": "#trust" },
-            { "label": "FAQ", "href": "#faq" }
-        ];
+  <main>
 
-        const stepsData = [
-            {
-                "title": "Choose your professional tier",
-                "description": "Select between pharmacist (₦3,500) or doctor (₦5,000) consultation based on your needs.",
-                "icon": "fas fa-user-md",
-                "color": "text-primary"
-            },
-            {
-                "title": "Describe your symptoms on WhatsApp",
-                "description": "Send your health concerns via WhatsApp chat. Our professionals will review and respond promptly.",
-                "icon": "fas fa-comment-medical",
-                "color": "text-secondary"
-            },
-            {
-                "title": "Get guidance and medication access",
-                "description": "Receive personalized advice, treatment plan, and pharmacy referrals if needed.",
-                "icon": "fas fa-prescription",
-                "color": "text-primary"
-            }
-        ];
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <span class="hero-label">Lagos, Nigeria · Early-stage concept</span>
+        <h1>Trusted health guidance,<br><em>right on WhatsApp</em></h1>
+        <p class="hero-sub">Imagine talking to a verified pharmacist or doctor — no app download, no hospital queue, no surprise costs. That's what we're building.</p>
+        <a href="https://wa.me/2347030332862" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Join the waitlist
+        </a>
+        <p class="hero-price-note">Planned pricing: ₦3,500 (pharmacist) · ₦5,000 (doctor)</p>
 
-        const faqData = [
-            {
-                "question": "How quickly will I get a response?",
-                "answer": "Most consultations begin within 15-30 minutes during business hours (9am-7pm)."
-            },
-            {
-                "question": "Is this service available outside Lagos?",
-                "answer": "Currently we serve Lagos residents only, but we plan to expand to other cities soon."
-            },
-            {
-                "question": "Can I get prescription medications?",
-                "answer": "Our doctors can prescribe medications and refer you to trusted pharmacies for pickup."
-            },
-            {
-                "question": "What if I need follow-up consultations?",
-                "answer": "Follow-up chats within 7 days are included in the initial consultation fee."
-            }
-        ];
+        <!-- INLINE DISCLAIMER -->
+        <div class="disclaimer-box">
+          <div class="disclaimer-box-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <strong>This is a prototype — not a live service</strong>
+          </div>
+          <p>If you click the WhatsApp button, you will reach our team directly — <strong>there is no medical professional on the other end</strong>. We are building this concept and seeking feedback from potential users.</p>
+          <p>Regulatory registration with MDCN and PCN is <strong>not yet complete</strong>. Please do not share any sensitive health information at this stage.</p>
+        </div>
+      </div>
+    </section>
 
-        const footerLinksData = [
-            { "label": "Privacy Policy", "href": "#privacy" },
-            { "label": "Terms of Service", "href": "#terms" },
-            { "label": "Contact", "href": "#contact" },
-            { "label": "Careers", "href": "#careers" }
-        ];
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works">
+      <div class="section-inner">
+        <div class="steps-header">
+          <p class="section-label">The experience we're designing</p>
+          <h2>How CarePath will work</h2>
+          <p class="section-intro">Simple, private, and accessible — no waiting rooms, no long commutes across Lagos.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card fade-up">
+            <span class="step-number">01</span>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3>Choose your professional tier</h3>
+            <p>Select between pharmacist (₦3,500) or doctor (₦5,000) based on the complexity of your concern.</p>
+          </div>
+          <div class="step-card fade-up">
+            <span class="step-number">02</span>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <h3>Describe your symptoms</h3>
+            <p>Send a message on WhatsApp — no app download, no registration form. Just chat naturally.</p>
+          </div>
+          <div class="step-card fade-up">
+            <span class="step-number">03</span>
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+            </div>
+            <h3>Receive guidance & pharmacy access</h3>
+            <p>Get personalised advice, a treatment plan, and trusted pharmacy referrals when needed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        // Reusable render functions
-        function renderNavigation(items) {
-            return items.map(item => `<li><a href="${item.href}" class="text-gray-600 hover:text-primary font-medium">${item.label}</a></li>`).join("");
-        }
+    <!-- TRUST -->
+    <section id="trust" class="trust-section">
+      <div class="section-inner">
+        <div class="trust-grid">
+          <div>
+            <p class="section-label">Planned safeguards</p>
+            <h2>Built around trust & safety</h2>
+            <p class="section-intro">When we launch, every professional on the platform will be independently verified and licensed.</p>
+          </div>
+          <div class="trust-pills">
+            <div class="trust-pill">
+              <div class="trust-pill-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <h4>PCN & MDCN verified professionals</h4>
+                <p>All pharmacists and doctors will hold valid licences from Nigeria's regulatory bodies before going live.</p>
+              </div>
+            </div>
+            <div class="trust-pill">
+              <div class="trust-pill-icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              </div>
+              <div>
+                <h4>Private & documented</h4>
+                <p>Consultations will be confidential. Records kept for continuity of care, not shared without consent.</p>
+              </div>
+            </div>
+            <div class="trust-pill">
+              <div class="trust-pill-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <h4>Response within 15–30 minutes</h4>
+                <p>Target response times during business hours (9am–7pm WAT), including follow-ups within 7 days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        function renderSteps(items) {
-            return items.map((item, index) => `
-                <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-gray-200">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full ${item.color} bg-accent flex items-center justify-center mr-4">
-                            <i class="${item.icon} text-2xl"></i>
-                        </div>
-                        <span class="text-xl font-semibold text-gray-800">Step ${index + 1}</span>
-                    </div>
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-3">${item.title}</h3>
-                    <p class="text-gray-600">${item.description}</p>
-                </div>
-            `).join("");
-        }
+    <!-- PROTOTYPE NOTICE -->
+    <section id="prototype" class="prototype-section">
+      <div class="section-inner">
+        <div class="proto-notice">
+          <div class="proto-notice-header">
+            <div class="proto-notice-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <div>
+              <span>Important disclosure</span>
+              <h3>CarePath is a prototype, not a live service</h3>
+            </div>
+          </div>
+          <ul>
+            <li><strong>No medical professionals are currently available.</strong> This website is a concept demonstration. Anyone responding via WhatsApp is a member of the founding team, not a licensed clinician.</li>
+            <li><strong>Regulatory approvals are pending.</strong> CarePath has not yet received the licences required to operate as a healthcare service in Nigeria. We are actively working through the registration process with MDCN and PCN.</li>
+            <li><strong>Do not make health decisions based on this platform.</strong> If you have a medical concern, please visit a registered clinic, pharmacy, or hospital in Lagos.</li>
+            <li><strong>We welcome your feedback.</strong> We're speaking with potential users to shape the product. Reach us at <a href="mailto:thelogicbaseng@gmail.com" style="color:#78350F;font-weight:600;text-decoration:underline">thelogicbaseng@gmail.com</a> — your input matters.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-        function renderFAQ(items) {
-            return items.map(item => `
-                <div class="bg-white rounded-lg border border-gray-200 p-6">
-                    <div class="flex items-start">
-                        <i class="fas fa-question-circle text-primary mr-3 mt-1"></i>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">${item.question}</h3>
-                    </div>
-                    <p class="text-gray-600">${item.answer}</p>
-                </div>
-            `).join("");
-        }
+    <!-- FAQ -->
+    <section id="faq" class="faq-section">
+      <div class="section-inner" style="text-align:center">
+        <p class="section-label">Questions</p>
+        <h2>Frequently asked</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">
+            How quickly will I get a response?
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">Most consultations begin within 15–30 minutes during business hours (9am–7pm). <strong>Note:</strong> in the current prototype stage, you will be speaking with our team, not a healthcare professional.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Is this service available outside Lagos?
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">We are designing the service for Lagos residents first, with plans to expand across Nigeria after launch.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Can I get prescription medications through CarePath?
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">Once fully licensed, our doctors will be able to prescribe medications and connect you with trusted pharmacies in Lagos. This is not available in the prototype phase.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            What does "follow-up included" mean?
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">Follow-up messages within 7 days of an initial consultation will be included in the original consultation fee — no additional charge.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            When will CarePath officially launch?
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">We don't have a confirmed launch date yet. We're currently in the prototype and validation phase. Sign up to our waitlist and we'll notify you when we're ready to go live.</div>
+        </div>
+      </div>
+    </section>
 
-        function renderFooterLinks(items) {
-            return items.map(item => `<li><a href="${item.href}" class="text-gray-600 hover:text-primary text-sm">${item.label}</a></li>`).join("");
-        }
+  </main>
 
-        // Initialize page content
-        document.getElementById("nav-items").innerHTML = renderNavigation(navigationData);
-        document.getElementById("mobile-nav-items").innerHTML = renderNavigation(navigationData);
-        document.getElementById("steps-container").innerHTML = renderSteps(stepsData);
-        document.getElementById("faq-container").innerHHTML = renderFAQ(faqData);
-        document.getElementById("footer-links").innerHTML = renderFooterLinks(footerLinksData);
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:rgba(255,255,255,0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          </div>
+          <span>CarePath</span>
+        </div>
+        <p class="footer-tagline">A concept by TheLogicBase · Lagos, Nigeria</p>
+      </div>
+      <div class="footer-contact">
+        <p style="margin-bottom:6px;font-size:0.85rem">Get in touch</p>
+        <a href="mailto:thelogicbaseng@gmail.com">thelogicbaseng@gmail.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 CarePath (Prototype). Not a registered medical service.</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
 
-        // Mobile menu toggle
-        document.getElementById("mobile-menu-btn").addEventListener("click", function() {
-            const menu = document.getElementById("mobile-menu");
-            menu.classList.toggle("hidden");
-        });
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
 
-        // Smooth scrolling for anchor links
-        document.addEventListener("click", function(event) {
-            const link = event.target.closest("a[href^='#']");
-            if (!link) return;
-            
-            // Close mobile menu if open
-            document.getElementById("mobile-menu").classList.add("hidden");
-            
-            const targetId = link.getAttribute("href");
-            if (targetId === "#home") {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                return;
-            }
-            
-            const target = document.querySelector(targetId);
-            if (target) {
-                event.preventDefault();
-                target.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-        });
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    hamburger.addEventListener('click', () => mobileNav.classList.toggle('open'));
 
-        // WhatsApp button behavior
-        document.getElementById("hero-button").addEventListener("click", function(event) {
-            // Allow normal link behavior for external URL
-            // No prevention needed for external links
-        });
+    // Close mobile nav on link click
+    mobileNav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => mobileNav.classList.remove('open'));
+    });
 
-        // Set current section IDs for smooth scrolling
-        document.querySelector("main").children[0].id = "home";
-        document.querySelector("main").children[1].id = "how-it-works";
-        document.querySelector("main").children[2].id = "trust";
-        document.querySelector("main").children[3].id = "faq";
-    </script>
+    // Fade-up on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Fix FAQ data rendering bug from original (innerHHTML typo) — done properly here with JS
+  </script>
 </body>
 </html>
