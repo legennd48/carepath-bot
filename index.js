@@ -61,8 +61,16 @@ app.post("/webhook", async (req, res) => {
     const change = entry?.changes?.[0];
     const value = change?.value;
 
+    console.log(
+      "Raw webhook payload:",
+      JSON.stringify(req.body, null, 2)
+    );
+
     // Ignore status updates (delivered, read receipts, etc.)
-    if (!value?.messages) return;
+    if (!value?.messages) {
+      console.log("No messages found in webhook payload");
+      return;
+    }
 
     const message = value.messages[0];
     const from = message.from; // e.g. "2348012345678"
@@ -80,6 +88,7 @@ app.post("/webhook", async (req, res) => {
         "";
     } else {
       // User sent an image, voice note, sticker, etc.
+      console.log(`Unsupported message type: ${type}`);
       await sendText(
         from,
         "Please reply with text or tap a button to continue."
@@ -90,6 +99,7 @@ app.post("/webhook", async (req, res) => {
     console.log(
       `[${new Date().toISOString()}] From ${from} (${type}): "${userInput}"`
     );
+    console.log("About to call handleFlow...");
     await handleFlow(from, userInput);
   } catch (error) {
     console.error("Error processing message:", error.message);
@@ -507,6 +517,7 @@ async function sendConsultationMessages(phone, data) {
 // LOW-LEVEL SEND HELPERS
 // ──────────────────────────────────────────────
 async function sendText(phone, text) {
+  console.log(`Attempting to send text to ${phone}...`);
   try {
     await axios.post(
       GRAPH_URL,
@@ -523,6 +534,7 @@ async function sendText(phone, text) {
         },
       }
     );
+    console.log("Send success:", response.data);
   } catch (err) {
     console.error(
       `Failed to send text to ${phone}:`,
@@ -532,6 +544,7 @@ async function sendText(phone, text) {
 }
 
 async function sendButtonMessage(phone, { body, buttons }) {
+  console.log(`Attempting to send buttons to ${phone}...`);
   // WhatsApp rules: max 3 buttons, each title max 20 characters
   const formattedButtons = buttons.map((b) => ({
     type: "reply",
@@ -558,6 +571,7 @@ async function sendButtonMessage(phone, { body, buttons }) {
         },
       }
     );
+    console.log("Button send success:", response.data);
   } catch (err) {
     console.error(
       `Failed to send buttons to ${phone}:`,
