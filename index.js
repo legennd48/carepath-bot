@@ -10,6 +10,7 @@ const TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_ID = process.env.PHONE_NUMBER_ID;
 const GRAPH_URL = `https://graph.facebook.com/v21.0/${PHONE_ID}/messages`;
 const PAYSTACK_LINK = process.env.PAYSTACK_LINK;
+const FEEDBACK_LINK = "https://forms.gle/wy45SJqCRxob8dCk7";
 
 // ──────────────────────────────────────────────
 // SESSION STORE
@@ -205,20 +206,21 @@ async function handleFlow(phone, rawInput) {
     // ── Disclaimer confirmation ────────────────
     case "await_disclaimer": {
       if (input === "yes" || input === "confirm_disclaimer") {
-        session.timestamps.disclaimerAccepted = new Date().toISOString();
+        session.timestamps.disclaimerAccepted =
+          new Date().toISOString();
         await sendButtonMessage(phone, {
           body:
             `Great! 👋\n\n` +
-            `To get started, we need to ask you three quick consent ` +
-            `questions. Ready?`,
+            `To get started, we need to ask you three quick ` +
+            `consent questions. Ready?`,
           buttons: [{ id: "start_consent", title: "Let's go" }],
         });
         session.step = "await_consent_start";
       } else {
         await sendText(
           phone,
-          `Please tap the *"Yes, I understand"* button above to ` +
-            `continue.`
+          `Please tap the *"Yes, I understand"* button above ` +
+            `to continue.`
         );
       }
       break;
@@ -286,9 +288,9 @@ async function handleFlow(phone, rawInput) {
         session.data.tier = "pharmacist";
         await sendText(
           phone,
-          `Great. Before we connect you to a pharmacist, please ` +
-            `answer a few quick questions so they can help you ` +
-            `better.\n\n` +
+          `Great. Before we connect you to a pharmacist, ` +
+            `please answer a few quick questions so they can ` +
+            `help you better.\n\n` +
             `What is your *main symptom* today?\n` +
             `_(e.g. fever, headache, stomach pain, cough)_`
         );
@@ -296,8 +298,8 @@ async function handleFlow(phone, rawInput) {
       } else if (input === "tier_doctor" || input === "2") {
         await sendText(
           phone,
-          `The Doctor tier is coming soon. We'll connect you to ` +
-            `a Pharmacist for now. 🔜`
+          `The Doctor tier is coming soon. We'll connect you ` +
+            `to a Pharmacist for now. 🔜`
         );
         session.data.tier = "pharmacist";
         await sendText(
@@ -378,19 +380,39 @@ async function handleFlow(phone, rawInput) {
 
       setTimeout(async () => {
         await sendConsultationMessages(phone, session.data);
-        session.step = "await_payment";
-        session.timestamps.paymentLinkSent = new Date().toISOString();
+        session.timestamps.paymentLinkSent =
+          new Date().toISOString();
+
+        await delay(3000);
+
+        await sendText(
+          phone,
+          `🙏 *One last thing!*\n\n` +
+            `While you complete your payment, we'd really ` +
+            `appreciate your feedback on this experience. ` +
+            `It takes less than 2 minutes and helps us build ` +
+            `CarePath better for everyone.\n\n` +
+            `📝 *Share your feedback here:*\n` +
+            `${FEEDBACK_LINK}\n\n` +
+            `Thank you for being part of the CarePath ` +
+            `prototype test! 💚`
+        );
+
+        session.step = "complete";
+        session.timestamps.feedbackLinkSent =
+          new Date().toISOString();
+        session.timestamps.completed = new Date().toISOString();
       }, 4000);
       break;
     }
 
-    // ── Waiting for payment ────────────────────
+    // ── Waiting for payment (admin can still confirm) ──
     case "await_payment": {
       await sendText(
         phone,
-        `Your consultation summary will be sent once payment is ` +
-          `confirmed.\n\nThe payment link is valid for 24 hours:\n` +
-          `💳 ${PAYSTACK_LINK}`
+        `Your consultation summary will be sent once payment ` +
+          `is confirmed.\n\nThe payment link is valid for ` +
+          `24 hours:\n💳 ${PAYSTACK_LINK}`
       );
       break;
     }
@@ -401,8 +423,10 @@ async function handleFlow(phone, rawInput) {
         phone,
         `Your CarePath session is complete. Thank you for ` +
           `participating in our prototype test! 🙏\n\n` +
-          `If you have a moment, we'd love your feedback:\n` +
-          `[GOOGLE_FORM_LINK_HERE]`
+          `If you haven't yet, please share your feedback:\n` +
+          `📝 ${FEEDBACK_LINK}\n\n` +
+          `For payment queries, the link is still valid:\n` +
+          `💳 ${PAYSTACK_LINK}`
       );
       break;
     }
@@ -480,10 +504,10 @@ async function sendConsultationMessages(phone, data) {
     phone,
     `Hello, I'm your CarePath pharmacist. I've reviewed your ` +
       `responses. Thank you for sharing.\n\n` +
-      `Based on what you've described — *${data.symptom}* lasting ` +
-      `*${data.duration}* with *${data.severity}* severity — ` +
-      `these are the kinds of things I'd typically discuss with ` +
-      `you:\n\n` +
+      `Based on what you've described — *${data.symptom}* ` +
+      `lasting *${data.duration}* with *${data.severity}* ` +
+      `severity — these are the kinds of things I'd typically ` +
+      `discuss with you:\n\n` +
       `• The pattern and duration of your symptoms\n` +
       `• Whether home rest and hydration have helped\n` +
       `• Whether OTC options are appropriate or if you need ` +
@@ -495,8 +519,8 @@ async function sendConsultationMessages(phone, data) {
   await sendText(
     phone,
     `Based on everything you've shared, this sounds like ` +
-      `something that could potentially be managed with the right ` +
-      `OTC approach, and I'd like to share a specific ` +
+      `something that could potentially be managed with the ` +
+      `right OTC approach, and I'd like to share a specific ` +
       `recommendation.\n\n` +
       `To receive your *documented consultation summary* and ` +
       `medication recommendation, please complete payment:\n\n` +
@@ -506,7 +530,7 @@ async function sendConsultationMessages(phone, data) {
 }
 
 // ──────────────────────────────────────────────
-// LOW-LEVEL SEND HELPERS (FIXED)
+// LOW-LEVEL SEND HELPERS
 // ──────────────────────────────────────────────
 async function sendText(phone, text) {
   console.log(`Attempting to send text to ${phone}...`);
