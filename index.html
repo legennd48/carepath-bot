@@ -200,6 +200,15 @@
       margin-top: 10px;
     }
 
+    /* ── HERO BUTTONS ── */
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
     /* ── PROTOTYPE DISCLAIMER BOX ── */
     .disclaimer-box {
       background: var(--amber-light);
@@ -229,7 +238,7 @@
     }
     .disclaimer-box p + p { margin-top: 8px; }
 
-    /* ── BUTTON ── */
+    /* ── BUTTONS ── */
     .btn-primary {
       display: inline-flex;
       align-items: center;
@@ -250,6 +259,27 @@
       box-shadow: 0 8px 28px rgba(13,92,54,0.3);
     }
     .btn-primary svg { width: 20px; height: 20px; fill: white; }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      color: var(--green-deep);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 13px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 2px solid var(--green-deep);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-secondary:hover {
+      background: var(--green-pale);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(13,92,54,0.15);
+    }
+    .btn-secondary svg { width: 20px; height: 20px; fill: var(--green-deep); }
 
     /* ── SECTION COMMONS ── */
     section { padding: 72px 24px; }
@@ -542,6 +572,7 @@
       .footer-inner { flex-direction: column; gap: 20px; }
       .footer-bottom { flex-direction: column; align-items: flex-start; }
       section { padding: 52px 20px; }
+      .hero-buttons { flex-direction: column; align-items: center; }
     }
 
     /* ── ANIMATIONS ── */
@@ -568,7 +599,7 @@
     <div class="nav-inner">
       <a href="#" class="logo">
         <div class="logo-mark">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/><path d="M11 6h2v2h-2zM11 16h2v2h-2z" opacity="0"/><path d="M10.5 6.5h3v11h-3z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         </div>
         <span class="logo-text">CarePath</span>
       </a>
@@ -578,7 +609,7 @@
         <li><a href="#prototype">Prototype notice</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
-      <a href="https://wa.me/2347030332862" class="nav-cta">Get early access</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfR1JQ0hwDCWniNx87SaW58e8byWJDYHY_HB9aoWiffuybsPA/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="nav-cta">Get early access</a>
       <button class="hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
@@ -589,7 +620,8 @@
         <a href="#trust">Trust & safety</a>
         <a href="#prototype">Prototype notice</a>
         <a href="#faq">FAQ</a>
-        <a href="https://wa.me/2347030332862" style="color:var(--green-deep);font-weight:600">Get early access →</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfR1JQ0hwDCWniNx87SaW58e8byWJDYHY_HB9aoWiffuybsPA/viewform?usp=header" target="_blank" rel="noopener noreferrer" style="color:var(--green-deep);font-weight:600">Join the waitlist →</a>
+        <a href="https://api.whatsapp.com/send/?phone=2347030332862&text=Hello" target="_blank" rel="noopener noreferrer" style="color:var(--green-mid);font-weight:600">Try the prototype →</a>
       </div>
     </div>
   </nav>
@@ -602,10 +634,19 @@
         <span class="hero-label">Lagos, Nigeria · Early-stage concept</span>
         <h1>Trusted health guidance,<br><em>right on WhatsApp</em></h1>
         <p class="hero-sub">Imagine talking to a verified pharmacist or doctor — no app download, no hospital queue, no surprise costs. That's what we're building.</p>
-        <a href="https://wa.me/2347030332862" class="btn-primary">
-          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Join the waitlist
-        </a>
+
+        <!-- TWO BUTTONS -->
+        <div class="hero-buttons">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfR1JQ0hwDCWniNx87SaW58e8byWJDYHY_HB9aoWiffuybsPA/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="btn-primary">
+            <svg viewBox="0 0 24 24" style="fill:white"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+            Join the waitlist
+          </a>
+          <a href="https://api.whatsapp.com/send/?phone=2347030332862&text=Hello" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Try the prototype
+          </a>
+        </div>
+
         <p class="hero-price-note">Planned pricing: ₦3,500 (pharmacist) · ₦5,000 (doctor)</p>
 
         <!-- INLINE DISCLAIMER -->
@@ -614,7 +655,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <strong>This is a prototype — not a live service</strong>
           </div>
-          <p>If you click the WhatsApp button, you will reach our team directly — <strong>there is no medical professional on the other end</strong>. We are building this concept and seeking feedback from potential users.</p>
+          <p>If you click <strong>"Try the prototype"</strong>, you will reach our team on WhatsApp — <strong>there is no medical professional on the other end</strong>. We are building this concept and seeking feedback from potential users.</p>
           <p>Regulatory registration with MDCN and PCN is <strong>not yet complete</strong>. Please do not share any sensitive health information at this stage.</p>
         </div>
       </div>
@@ -716,7 +757,7 @@
             <li><strong>No medical professionals are currently available.</strong> This website is a concept demonstration. Anyone responding via WhatsApp is a member of the founding team, not a licensed clinician.</li>
             <li><strong>Regulatory approvals are pending.</strong> CarePath has not yet received the licences required to operate as a healthcare service in Nigeria. We are actively working through the registration process with MDCN and PCN.</li>
             <li><strong>Do not make health decisions based on this platform.</strong> If you have a medical concern, please visit a registered clinic, pharmacy, or hospital in Lagos.</li>
-            <li><strong>We welcome your feedback.</strong> We're speaking with potential users to shape the product. Reach us at <a href="mailto:info@baselogic.dev" style="color:#78350F;font-weight:600;text-decoration:underline">thelogicbaseng@gmail.com</a> — your input matters.</li>
+            <li><strong>We welcome your feedback.</strong> We're speaking with potential users to shape the product. Reach us at <a href="mailto:admin@baselogic.dev" style="color:#78350F;font-weight:600;text-decoration:underline">admin@baselogic.dev</a> — your input matters.</li>
           </ul>
         </div>
       </div>
@@ -779,11 +820,11 @@
           </div>
           <span>CarePath</span>
         </div>
-        <p class="footer-tagline">A concept by TheLogicBase · Lagos, Nigeria</p>
+        <p class="footer-tagline">A concept by The LogicBase · Lagos, Nigeria</p>
       </div>
       <div class="footer-contact">
         <p style="margin-bottom:6px;font-size:0.85rem">Get in touch</p>
-        <a href="mailto:thelogicbaseng@gmail.com">thelogicbaseng@gmail.com</a>
+        <a href="mailto:admin@baselogic.dev">admin@baselogic.dev</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -822,8 +863,6 @@
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.15 });
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-    // Fix FAQ data rendering bug from original (innerHHTML typo) — done properly here with JS
   </script>
 </body>
 </html>
