@@ -13,8 +13,6 @@ const PAYSTACK_LINK = process.env.PAYSTACK_LINK;
 
 // ──────────────────────────────────────────────
 // SESSION STORE
-// Tracks where each user is in the flow
-// Key = phone number, Value = { step, data, timestamps }
 // ──────────────────────────────────────────────
 const sessions = {};
 
@@ -30,10 +28,7 @@ function getSession(phone) {
 }
 
 // ──────────────────────────────────────────────
-// WEBHOOK VERIFICATION (GET request)
-// Meta sends this ONCE when you register your webhook URL.
-// It sends your verify token back and expects you to
-// return the challenge string if the token matches.
+// WEBHOOK VERIFICATION
 // ──────────────────────────────────────────────
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
@@ -49,11 +44,9 @@ app.get("/webhook", (req, res) => {
 });
 
 // ──────────────────────────────────────────────
-// INCOMING MESSAGES (POST request)
-// Meta sends this every time a user messages your number.
+// INCOMING MESSAGES
 // ──────────────────────────────────────────────
 app.post("/webhook", async (req, res) => {
-  // Always respond 200 immediately — Meta will retry if you don't
   res.sendStatus(200);
 
   try {
@@ -66,28 +59,24 @@ app.post("/webhook", async (req, res) => {
       JSON.stringify(req.body, null, 2)
     );
 
-    // Ignore status updates (delivered, read receipts, etc.)
     if (!value?.messages) {
       console.log("No messages found in webhook payload");
       return;
     }
 
     const message = value.messages[0];
-    const from = message.from; // e.g. "2348012345678"
+    const from = message.from;
     const type = message.type;
 
-    // Extract user input based on message type
     let userInput = "";
     if (type === "text") {
       userInput = message.text.body.trim();
     } else if (type === "interactive") {
-      // User tapped a button
       userInput =
         message.interactive?.button_reply?.id ||
         message.interactive?.list_reply?.id ||
         "";
     } else {
-      // User sent an image, voice note, sticker, etc.
       console.log(`Unsupported message type: ${type}`);
       await sendText(
         from,
@@ -108,19 +97,13 @@ app.post("/webhook", async (req, res) => {
 
 // ──────────────────────────────────────────────
 // ADMIN ENDPOINTS
-// For you (the founder) to manage test sessions
 // ──────────────────────────────────────────────
-
-// Reset a user's session so they can start over
-// Usage: GET /admin/reset/2348012345678
 app.get("/admin/reset/:phone", (req, res) => {
   const phone = req.params.phone;
   delete sessions[phone];
   res.json({ message: `Session reset for ${phone}` });
 });
 
-// See where a user currently is in the flow
-// Usage: GET /admin/session/2348012345678
 app.get("/admin/session/:phone", (req, res) => {
   const phone = req.params.phone;
   const session = sessions[phone];
@@ -128,14 +111,10 @@ app.get("/admin/session/:phone", (req, res) => {
   res.json(session);
 });
 
-// See all active sessions
-// Usage: GET /admin/sessions
 app.get("/admin/sessions", (req, res) => {
   res.json(sessions);
 });
 
-// Manually trigger the post-payment confirmation message
-// Usage: GET /admin/confirm-payment/2348012345678
 app.get("/admin/confirm-payment/:phone", async (req, res) => {
   const phone = req.params.phone;
   const session = sessions[phone];
@@ -176,28 +155,48 @@ app.get("/admin/confirm-payment/:phone", async (req, res) => {
 
 // ──────────────────────────────────────────────
 // FLOW STATE MACHINE
-// This is the heart of the bot. Each "step" value
-// represents where the user is in the CarePath flow.
 // ──────────────────────────────────────────────
 async function handleFlow(phone, rawInput) {
   const session = getSession(phone);
   const input = rawInput.toLowerCase();
 
   switch (session.step) {
-    // ── First contact ──────────────────────────
+    // ── First contact — welcome + intro ────────
     case "start": {
+      await sendText(
+        phone,
+        `👋 *Welcome to CarePath!*\n\n` +
+          `CarePath is a health-tech platform being built to give ` +
+          `everyday Nigerians instant access to verified pharmacists ` +
+          `and doctors — right here on WhatsApp.\n\n` +
+          `🏥 *Why are we building this?*\n` +
+          `Millions of people self-medicate or avoid care because ` +
+          `clinics are far, expensive, or overcrowded. CarePath ` +
+          `removes those barriers by letting you consult a licensed ` +
+          `health professional from your phone — no app download, ` +
+          `no queues, no hassle.\n\n` +
+          `🔬 *What's happening right now?*\n` +
+          `You're about to experience a prototype of the CarePath ` +
+          `consultation flow. We're testing how it feels so we can ` +
+          `make it better before launch.\n\n` +
+          `Tap the button below when you're ready to proceed.`
+      );
+
+      await delay(1500);
+
       await sendButtonMessage(phone, {
         body:
-          `Hi! Before we begin, please note:\n\n` +
-          `🔬 *This is a prototype usability test for CarePath.*\n\n` +
-          `No real medical advice will be given. You will not speak ` +
-          `to an actual licensed professional. This is purely a user ` +
-          `experience test. Any responses you receive are scripted ` +
-          `for testing purposes.\n\n` +
-          `Please do not make any health decisions based on anything ` +
-          `said during this session.\n\n` +
+          `⚠️ *Important — Please read before continuing:*\n\n` +
+          `This is a *prototype usability test*. No real medical ` +
+          `advice will be given. You will not speak to an actual ` +
+          `licensed professional. Any responses you receive are ` +
+          `scripted for testing purposes.\n\n` +
+          `Please do not make any health decisions based on ` +
+          `anything said during this session.\n\n` +
           `Do you understand and agree to proceed?`,
-        buttons: [{ id: "confirm_disclaimer", title: "Yes, I understand" }],
+        buttons: [
+          { id: "confirm_disclaimer", title: "Yes, I understand" },
+        ],
       });
       session.step = "await_disclaimer";
       break;
@@ -209,9 +208,7 @@ async function handleFlow(phone, rawInput) {
         session.timestamps.disclaimerAccepted = new Date().toISOString();
         await sendButtonMessage(phone, {
           body:
-            `Welcome to *CarePath* 👋\n\n` +
-            `We connect you to verified health professionals on ` +
-            `WhatsApp — no app download, no hospital queues.\n\n` +
+            `Great! 👋\n\n` +
             `To get started, we need to ask you three quick consent ` +
             `questions. Ready?`,
           buttons: [{ id: "start_consent", title: "Let's go" }],
@@ -220,7 +217,8 @@ async function handleFlow(phone, rawInput) {
       } else {
         await sendText(
           phone,
-          `Please tap the *"Yes, I understand"* button above to continue.`
+          `Please tap the *"Yes, I understand"* button above to ` +
+            `continue.`
         );
       }
       break;
@@ -298,8 +296,8 @@ async function handleFlow(phone, rawInput) {
       } else if (input === "tier_doctor" || input === "2") {
         await sendText(
           phone,
-          `The Doctor tier is coming soon. We'll connect you to a ` +
-            `Pharmacist for now. 🔜`
+          `The Doctor tier is coming soon. We'll connect you to ` +
+            `a Pharmacist for now. 🔜`
         );
         session.data.tier = "pharmacist";
         await sendText(
@@ -319,7 +317,7 @@ async function handleFlow(phone, rawInput) {
 
     // ── Symptom intake ─────────────────────────
     case "symptom_1": {
-      session.data.symptom = rawInput; // Preserve original casing
+      session.data.symptom = rawInput;
       await sendText(phone, `How long have you had this symptom?`);
       session.step = "symptom_2";
       break;
@@ -340,7 +338,6 @@ async function handleFlow(phone, rawInput) {
     }
 
     case "symptom_3": {
-      // Map button IDs to readable labels
       const severityMap = {
         severity_mild: "Mild",
         severity_moderate: "Moderate",
@@ -379,7 +376,6 @@ async function handleFlow(phone, rawInput) {
           `pharmacist now. Please hold on for a moment. ⏳`
       );
 
-      // Simulate delay before "pharmacist" responds
       setTimeout(async () => {
         await sendConsultationMessages(phone, session.data);
         session.step = "await_payment";
@@ -412,7 +408,6 @@ async function handleFlow(phone, rawInput) {
     }
 
     default: {
-      // If somehow the state is corrupted, reset
       sessions[phone] = { step: "start", data: {}, timestamps: {} };
       await handleFlow(phone, rawInput);
     }
@@ -481,7 +476,6 @@ async function sendTierSelection(phone) {
 // SIMULATED CONSULTATION + PAYMENT PROMPT
 // ──────────────────────────────────────────────
 async function sendConsultationMessages(phone, data) {
-  // Pharmacist greeting
   await sendText(
     phone,
     `Hello, I'm your CarePath pharmacist. I've reviewed your ` +
@@ -496,10 +490,8 @@ async function sendConsultationMessages(phone, data) {
       `further evaluation`
   );
 
-  // Short pause to feel natural
   await delay(3000);
 
-  // Payment prompt
   await sendText(
     phone,
     `Based on everything you've shared, this sounds like ` +
@@ -514,12 +506,12 @@ async function sendConsultationMessages(phone, data) {
 }
 
 // ──────────────────────────────────────────────
-// LOW-LEVEL SEND HELPERS
+// LOW-LEVEL SEND HELPERS (FIXED)
 // ──────────────────────────────────────────────
 async function sendText(phone, text) {
   console.log(`Attempting to send text to ${phone}...`);
   try {
-    await axios.post(
+    const response = await axios.post(
       GRAPH_URL,
       {
         messaging_product: "whatsapp",
@@ -545,14 +537,13 @@ async function sendText(phone, text) {
 
 async function sendButtonMessage(phone, { body, buttons }) {
   console.log(`Attempting to send buttons to ${phone}...`);
-  // WhatsApp rules: max 3 buttons, each title max 20 characters
   const formattedButtons = buttons.map((b) => ({
     type: "reply",
     reply: { id: b.id, title: b.title.slice(0, 20) },
   }));
 
   try {
-    await axios.post(
+    const response = await axios.post(
       GRAPH_URL,
       {
         messaging_product: "whatsapp",
